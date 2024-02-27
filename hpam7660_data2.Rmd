@@ -1,0 +1,53 @@
+---
+title: "HPAM 7660 Data Assignment 2"
+author: "Grace Arkfeld"
+date: "2024-02-19"
+output:
+  pdf_document: default
+  word_document: default
+---
+```{r}
+options(repos = "https://cloud.r-project.org/")
+```
+```{r}
+install.packages("dplyr")
+install.packages("nycflights13")
+library(dplyr)
+library(nycflights13)
+```
+```{r}
+united_flights <- flights %>% filter(carrier == "UA")
+```
+```{r}
+united_flights_lga <- flights %>% filter(carrier == "UA", origin == "LGA")
+```
+```{r}
+united_flights_dest <- flights %>% 
+                       filter(carrier == "UA", 
+                              origin == "LGA", 
+                              dest %in% c("ORD", "DEN", "IAH", "CLE"))
+```
+```{r}
+delay_summary <- united_flights_dest %>% 
+                 summarize(mean_delay = mean(arr_delay, na.rm = TRUE),
+                           sd_delay = sd(arr_delay, na.rm = TRUE))
+```
+```{r}
+knitr::kable(delay_summary)
+```
+```{r}
+delay_summary <- united_flights_dest %>% 
+                 summarize(mean_delay = mean(arr_delay, na.rm = TRUE),
+                           sd_delay = sd(arr_delay, na.rm = TRUE),
+                           total_obs = n())
+```
+```{r}
+delay_by_month <- united_flights_dest %>% 
+                   group_by(month) %>%
+                   summarize(mean_delay = mean(arr_delay, na.rm = TRUE),
+                             sd_delay = sd(arr_delay, na.rm = TRUE),
+                             total_obs = n())
+```
+```{r}
+knitr::kable(delay_summary)
+```
